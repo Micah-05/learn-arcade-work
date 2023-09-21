@@ -47,10 +47,10 @@ arcade.draw_lrtb_rectangle_filled(465,535,287,282, arcade.color.WHITE)
 arcade.draw_lrtb_rectangle_filled(498,503,320,250, arcade.color.WHITE)
 
 # House Roof
-arcade.draw_triangle_filled(600,600,200,200,300,300, arcade.color.COOL_BLACK)
+arcade.draw_triangle_filled(380,580,630,420,120,420, arcade.color.COOL_BLACK)
 
 # Walkway
-arcade.draw_lrtb_rectangle_filled(295,450,170,0, arcade.color.GRAY)
+arcade.draw_lrtb_rectangle_filled(295,450,169,0, arcade.color.GRAY)
 
 # --- Draw Trees ---
 
