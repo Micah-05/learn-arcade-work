@@ -1,30 +1,6 @@
 import arcade
 
 
-def draw_car(x,y):
-    """Draw a Car"""
-
-    # Point of Reference
-    arcade.draw_point(x,y,arcade.color.RED,5)
-
-    # Base
-    arcade.draw_lrtb_rectangle_filled(x, 170 + x, 90 + y, 50 + y, arcade.color.BLUEBERRY)
-
-    # Roof
-    arcade.draw_lrtb_rectangle_filled(x, 190 + x, 125 + y, 90 + y, arcade.color.BLUEBERRY)
-
-    # Lights
-    arcade.draw_lrtb_rectangle_filled(x, 170 + x, 75 + y, 55 + y, arcade.color.WHITE)
-
-    # Windows
-    arcade.draw_lrtb_rectangle_filled(x - 15, x + 120, 120 + y, 90 + y, arcade.color.DIM_GRAY)
-    arcade.draw_lrtb_rectangle_filled(x + 15, x + 160, 120 + y, 90 + y, arcade.color.DIM_GRAY)
-
-    # Wheels
-    arcade.draw_circle_filled(x + 15, 50 + y, 18, arcade.color.BLACK)
-    arcade.draw_circle_filled(x + 15, 50 + y, 18, arcade.color.BLACK)
-
-
 def draw_house():
     """Draw a House"""
 
@@ -88,26 +64,31 @@ def draw_road():
     arcade.draw_lrtb_rectangle_filled(0, 800, 80, 0, arcade.color.GRAY)
 
 
+def draw_car(x,y):
+    """Draw a Car"""
+
+
+    # Base
+    arcade.draw_lrtb_rectangle_filled(x, 170 + x, 90 + y, 50 + y, arcade.color.BLUEBERRY)
+
+    # Roof
+    arcade.draw_lrtb_rectangle_filled(x, 190 + x, 125 + y, 90 + y, arcade.color.BLUEBERRY)
+
+    # Lights
+    arcade.draw_lrtb_rectangle_filled(x, 170 + x, 75 + y, 55 + y, arcade.color.WHITE)
+
+    # Windows
+    arcade.draw_lrtb_rectangle_filled(x - 15, x + 120, 120 + y, 90 + y, arcade.color.DIM_GRAY)
+    arcade.draw_lrtb_rectangle_filled(x + 15, x + 160, 120 + y, 90 + y, arcade.color.DIM_GRAY)
+
+    # Wheels
+    arcade.draw_circle_filled(x + 15, 50 + y, 18, arcade.color.BLACK)
+    arcade.draw_circle_filled(x + 150, 50 + y, 18, arcade.color.BLACK)
+
+
+
 def on_draw(delta_time):
     """Draw Everything"""
-    arcade.start_render()
-
-    draw_road()
-    draw_car(on_draw.car1_x, 150)
-
-    # Add one to the x value, making the car move right
-    # Negative numbers move left. Larger numbers move faster.
-    on_draw.car1_x += 1
-
-
-    # Create a value that our on_draw.car1_x will start at.
-    on_draw.car1_x = 150
-
-
-
-def main():
-    arcade.open_window(800, 600, "Lab_03")
-    arcade.set_background_color(arcade.color.AIR_SUPERIORITY_BLUE)
     arcade.start_render()
 
     draw_grass()
@@ -115,12 +96,27 @@ def main():
     draw_house()
     draw_tree()
     draw_road()
-    draw_car(0,0)
+    draw_road()
+    draw_car(on_draw.car1_x, 20)
 
+    # Add one to the x value, making the car move right
+    # Negative numbers move left. Larger numbers move faster.
+    on_draw.car1_x += 3
+
+
+    # Create a value that our on_draw.car1_x will start at.
+
+    arcade.finish_render()
+
+def main():
+    arcade.open_window(800, 600, "Lab_03")
+    arcade.set_background_color(arcade.color.AIR_SUPERIORITY_BLUE)
+
+
+    on_draw.car1_x=50
 
     # Call on_draw every 60th of a second.
     arcade.schedule(on_draw, 1 / 60)
-    arcade.finish_render()
 
     # Keep the window up until someone closes it.
     arcade.run()
