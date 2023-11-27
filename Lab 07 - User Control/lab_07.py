@@ -69,6 +69,8 @@ class MyGame(arcade.Window):
         self.position_x = x
         self.position_y = y
 
+        self.set_mouse_visible(False)
+
     def __init__(self):
         """ Initializer """
 
