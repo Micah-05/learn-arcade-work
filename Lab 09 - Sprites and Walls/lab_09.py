@@ -27,6 +27,8 @@ CAMERA_SPEED = 0.1
 # How fast the character moves
 PLAYER_MOVEMENT_SPEED = 5
 
+COIN_COUNT = 40
+
 
 class MyGame(arcade.Window):
     """ Main application class. """
@@ -40,9 +42,11 @@ class MyGame(arcade.Window):
         # Sprite lists
         self.player_list = None
         self.wall_list = None
+        self.coin_list = None
 
         # Set up the player
         self.player_sprite = None
+        self.score = 0
 
         # Physics engine so we don't run into walls.
         self.physics_engine = None
@@ -69,20 +73,68 @@ class MyGame(arcade.Window):
         # Sprite lists
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
+        self.coin_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = arcade.Sprite(":resources:images/animated_characters/female_person/femalePerson_idle.png",
-                                           scale=0.4)
+        self.player_sprite = arcade.Sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_walk3.png",
+                                           scale=0.5)
         self.player_sprite.center_x = 256
         self.player_sprite.center_y = 512
         self.player_list.append(self.player_sprite)
 
+        for i in range(COIN_COUNT):
+            # Create the coin instance
+            # Coin image from kenney.nl
+            coin = arcade.Sprite(":resources:images/items/coinGold.png", 0.5)
+
+            coin_placed_successfully = False
+
+            # Keep trying until success
+            while not coin_placed_successfully:
+                # Position the coin
+                coin.center_x = random.randrange(-30,1700)
+                coin.center_y = random.randrange(-50,1670)
+
+                # See if the coin is hitting a wall
+                wall_hit_list = arcade.check_for_collision_with_list(coin, self.wall_list)
+
+                # See if the coin is hitting another coin
+                coin_hit_list = arcade.check_for_collision_with_list(coin, self.coin_list)
+
+                if len(wall_hit_list) == 0 and len(coin_hit_list) == 0:
+                    # It is!
+                    coin_placed_successfully = True
+
+            # Add the coin to the lists
+            self.coin_list.append(coin)
+
+
         # -- Set up several columns of walls
+        for x in range(-40, 1700 , 50):
+            wall = arcade.Sprite(":resources:images/tiles/brickGrey.png", SPRITE_SCALING)
+            wall.center_x = x
+            wall.center_y = 1670
+            self.wall_list.append(wall)
+        for x in range(-40, 1700 , 50):
+            wall = arcade.Sprite(":resources:images/tiles/brickGrey.png", SPRITE_SCALING)
+            wall.center_x = x
+            wall.center_y = -60
+            self.wall_list.append(wall)
+        for y in range(-40, 1700 , 50):
+            wall = arcade.Sprite(":resources:images/tiles/brickGrey.png", SPRITE_SCALING)
+            wall.center_x = 1700
+            wall.center_y = y
+            self.wall_list.append(wall)
+        for y in range(-40, 1700 , 50):
+            wall = arcade.Sprite(":resources:images/tiles/brickGrey.png", SPRITE_SCALING)
+            wall.center_x = -40
+            wall.center_y = y
+            self.wall_list.append(wall)
         for x in range(200, 1650, 210):
-            for y in range(0, 1600, 64):
+            for y in range(10, 1600, 64):
                 # Randomly skip a box so the player can find a way through
                 if random.randrange(5) > 0:
-                    wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
+                    wall = arcade.Sprite(":resources:images/tiles/boxCrate_single.png", SPRITE_SCALING)
                     wall.center_x = x
                     wall.center_y = y
                     self.wall_list.append(wall)
@@ -107,6 +159,7 @@ class MyGame(arcade.Window):
         # Draw all the sprites.
         self.wall_list.draw()
         self.player_list.draw()
+        self.coin_list.draw()
 
 
         # Select the (unscrolled) camera for our GUI
@@ -123,6 +176,9 @@ class MyGame(arcade.Window):
         text = f"Scroll value: ({self.camera_sprites.position[0]:5.1f}, " \
                f"{self.camera_sprites.position[1]:5.1f})"
         arcade.draw_text(text, 10, 10, arcade.color.BLACK_BEAN, 20)
+
+        output = f"Score: {self.score}"
+        arcade.draw_text(output, 10, 550, arcade.color.WHITE, 14)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -150,6 +206,14 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         """ Movement and game logic """
+
+        self.coin_list.update()
+
+        coins_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                              self.coin_list)
+        for coin in coins_hit_list:
+            coin.remove_from_sprite_lists()
+            self.score += 1
 
         # Calculate speed based on the keys pressed
         self.player_sprite.change_x = 0

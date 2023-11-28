@@ -46,9 +46,31 @@ def main():
 
     print("---Binary Search---")
 
+    key = dict_list
+    book_1 = open("AliceInWonderLand200.txt")
+    book_list = []
+    line_number1 = 0
+    dict_list1 = len(dict_list)-1
+    found = False
 
+    # Loop until we find the item, or our upper/lower bounds meet
+    while line_number1 <= dict_list1 and not found:
 
+        # Find the middle position
+        middle_pos = (line_number1 + dict_list1) // 2
 
+        # Figure out if we:
+        # move up the lower bound, or
+        # move down the upper bound, or
+        # we found what we are looking for
+        if dict_list[middle_pos] < key:
+            line_number1 = middle_pos + 1
+        elif dict_list[middle_pos] > key:
+            dict_list1 = middle_pos - 1
+        else:
+            found = True
+
+    book_1.close()
 
 
 
