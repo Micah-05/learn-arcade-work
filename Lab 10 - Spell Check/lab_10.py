@@ -46,29 +46,40 @@ def main():
 
     print("---Binary Search---")
 
-    key = dict_list
-    book_1 = open("AliceInWonderLand200.txt")
     book_list = []
-    line_number1 = 0
-    dict_list1 = len(dict_list)-1
-    found = False
+    book_1 = open("AliceInWonderLand200.txt")
+    for line in book_1:
+        line.strip()
+        book_list.append(line)
 
-    # Loop until we find the item, or our upper/lower bounds meet
-    while line_number1 <= dict_list1 and not found:
+    line_number = 0
+    for line in book_list:
+        line_number += 1
+        words = split_line(line)
+        # Loop until we find the item, or our upper/lower bounds meet
+        for word in words:
+            lower_bound = 0
+            upper_bound = len(dict_list) - 1
+            found = False
+            while lower_bound <= upper_bound and not found:
 
-        # Find the middle position
-        middle_pos = (line_number1 + dict_list1) // 2
+                # Find the middle position
+                middle_pos = (lower_bound + upper_bound) // 2
 
-        # Figure out if we:
-        # move up the lower bound, or
-        # move down the upper bound, or
-        # we found what we are looking for
-        if dict_list[middle_pos] < key:
-            line_number1 = middle_pos + 1
-        elif dict_list[middle_pos] > key:
-            dict_list1 = middle_pos - 1
-        else:
-            found = True
+                # Figure out if we:
+                # move up the lower bound, or
+                # move down the upper bound, or
+                # we found what we are looking for
+                if dict_list[middle_pos] < word.upper():
+                    lower_bound = middle_pos + 1
+                elif dict_list[middle_pos] > word.upper():
+                    upper_bound = middle_pos - 1
+                else:
+                    found = True
+                    break
+
+            if not found:
+                print("Line", line_number, "possible misspelled word:", word)
 
     book_1.close()
 
