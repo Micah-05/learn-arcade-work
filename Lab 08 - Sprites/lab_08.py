@@ -67,13 +67,29 @@ class MyGame(arcade.Window):
             # Add the coin to the lists
             self.coin_list.append(coin)
 
-        for i in range(ROCK_COUNT):
-            rock = arcade.Sprite(":resources:images/space_shooter/meteorGrey_big2.png", SPRITE_SCALING_ROCK)
+        for i in range(_COUNT):
+            coin = arcade.Sprite(":resources:images/space_shooter/meteorGrey_big2.png", SPRITE_SCALING_ROCK)
 
-            rock.center_x = random.randrange(SCREEN_WIDTH)
-            rock.center_y = random.randrange(SCREEN_HEIGHT)
+            coin_placed_successfully = False
 
-            self.rock_list.append(rock)
+            # Keep trying until success
+            while not coin_placed_successfully:
+                # Position the coin
+                coin.center_x = random.randrange(SCREEN_WIDTH)
+                coin.center_y = random.randrange(SCREEN_HEIGHT)
+
+                # See if the coin is hitting a wall
+                wall_hit_list = arcade.check_for_collision_with_list(coin, self.wall_list)
+
+                # See if the coin is hitting another coin
+                coin_hit_list = arcade.check_for_collision_with_list(coin, self.coin_list)
+
+                if len(wall_hit_list) == 0 and len(coin_hit_list) == 0:
+                    # It is!
+                    coin_placed_successfully = True
+
+            # Add the coin to the lists
+            self.coin_list.append(coin)
 
     def on_draw(self):
         """ Draw everything """
